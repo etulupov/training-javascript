@@ -1,0 +1,112 @@
+#content {
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 400px;
+
+    text-align: center;
+}
+
+button {
+    /* Mozilla Firefox */
+    background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #DBDBDB 50%, #FFFFFF 100%);
+
+    /* Opera */
+    background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #DBDBDB 50%, #FFFFFF 100%);
+
+    /* Webkit (Safari/Chrome 10) */
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(0.5, #DBDBDB), color-stop(1, #FFFFFF));
+
+    /* Webkit (Chrome 11+) */
+    background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #DBDBDB 50%, #FFFFFF 100%);
+
+    border: 1px solid #999;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    padding: 8px;
+    display: block;
+
+    /*Transition*/
+    -webkit-transition: -webkit-box-shadow 0.5s ease-out;
+    -moz-transition: -moz-box-shadow 0.5s ease-out;
+    -o-transition: box-shadow 0.5s ease-out;
+
+    color: #555;
+
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+
+    border-color: #0099ff;
+
+    color: #000;
+    -moz-box-shadow: 0px 0px 15px #0099ff;
+    -webkit-box-shadow: 0px 0px 15px #0099ff;
+    box-shadow: 0px 0px 15px #0099ff;
+}
+
+button:disabled {
+    color: #ccc;
+    border-color: #ccc;
+}
+
+#box {
+    color: #000;
+    background-color: #ffc;
+
+    display: inline-block;
+
+    background-image: linear-gradient(bottom, rgb(250, 250, 170) 27%, rgb(255, 255, 204) 82%);
+    background-image: -o-linear-gradient(bottom, rgb(250, 250, 170) 27%, rgb(255, 255, 204) 82%);
+    background-image: -moz-linear-gradient(bottom, rgb(250, 250, 170) 27%, rgb(255, 255, 204) 82%);
+    background-image: -webkit-linear-gradient(bottom, rgb(250, 250, 170) 27%, rgb(255, 255, 204) 82%);
+    background-image: -ms-linear-gradient(bottom, rgb(250, 250, 170) 27%, rgb(255, 255, 204) 82%);
+
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.27, rgb(250, 250, 170)), color-stop(0.82, rgb(255, 255, 204)));
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #999;
+
+    padding: 10 10 5 10;
+
+    -moz-box-shadow: 0px 0px 15px #777;
+    -webkit-box-shadow: 0px 0px 15px #777;
+    box-shadow: 0px 0px 15px #777;
+
+    margin: 15px;
+
+}
+
+#box div {
+    display: inline-block;
+}
+
+#box img {
+    width: 60px;
+    height: 60px;
+    vertical-align: middle
+}
+
+.logo {
+    max-width: 400px;
+    max-height: 400px;
+    margin: 20px;
+    -moz-opacity: 0.3;
+    opacity: 0.3;
+
+    -webkit-transition: opacity 0.7s ease-out;
+    -moz-transition: -moz-opacity 0.7s ease-out;
+    -o-transition: opacity 0.7s ease-out;
+}
+
+.logo:hover {
+    -moz-opacity: 1;
+    opacity: 1;
+}
