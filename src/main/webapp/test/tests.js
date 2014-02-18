@@ -74,3 +74,5 @@ asyncTest("buttonOnClickHandler test", function () {
         start();
     }, 1000);
 });
+
+// CR1 Please add test for JsonValidator with different arguments

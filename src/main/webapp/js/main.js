@@ -31,6 +31,9 @@ function getXmlHttp() {
     return xmlhttp;
 }
 
+// CR1 I think in your case it is good to introduce MVC pattern (also it will be quite interesting if you introduce some
+// event bus)
+
 /**
  * Execute AJAX-query
  * @param url the url
@@ -45,6 +48,9 @@ function getJSON(url, success, fail, always) {
     http.onreadystatechange = function () {
         if (http.readyState == READY_STATE) {
             if (http.status == HTTP_OK_STATUS) {
+                // CR1 You define JsonValidator, probably it is better to move all validation to some validator?
+                // because you have two different functions to process error cases (here - fail and in JsonValidator)
+                // it has a sense to have only one fil function provided by the invoker
                 try {
                     success(JSON.parse(http.responseText));
                 } catch (e) {

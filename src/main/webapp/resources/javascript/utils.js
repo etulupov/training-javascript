@@ -72,6 +72,7 @@ function ajaxSuccessCallback(callback, json) {
     if (result === true) {
         callback(json.text);
     } else {
+        // CR1: Probably is it better to display to user that something is wrong?
         console.log(result);
     }
 }
