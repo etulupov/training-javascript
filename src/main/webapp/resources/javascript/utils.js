@@ -1,8 +1,13 @@
+/*global console */
+/*global alert */
+/*global JsonValidator */
+/*jshint -W079 */
+
 /**
  * The URL for AJAX queries
  * @type {string}
  */
-var AJAX_QUERY_URL = "/js-training/json";
+var AJAX_QUERY_URL = "/json";
 
 
 /**
@@ -10,8 +15,9 @@ var AJAX_QUERY_URL = "/js-training/json";
  * @param event the event
  * @return {EventTarget|Object} the source
  */
-function getSourceFromEvent(event) {
-    var event = event || window.event;
+function getSourceFromEvent(e) {
+    'use strict';
+    var event = e || window.event;
 
     return event.target || event.srcElement;
 }
@@ -20,16 +26,37 @@ function getSourceFromEvent(event) {
  * Defines console object if it not exists (for compatibility with older browsers)
  */
 function defineLogIfNotExists() {
-    if (typeof console != "object" || !console) {
+    'use strict';
+
+    if (typeof console !== "object" || !console) {
         window.console = {
-            log: function () {
+            log: function (message) {
+                alert(message);
             }
         };
     }
 }
 
+/**
+ * Defines Object.keys if it not exists (for compatibility with older browsers)
+ */
+function defineObjectKeysIfNotExists() {
+    'use strict';
 
-JsonValidator = {
+    if (!Object.keys) {
+        Object.keys = function (obj) {
+            var keys = [], k;
+            for (k in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                    keys.push(k);
+                }
+            }
+            return keys;
+        };
+    }
+}
+
+var JsonValidator = {
     /**
      * Validates json-object
      * @param json the object
@@ -37,22 +64,31 @@ JsonValidator = {
      * @return {Array}
      */
     validate: function (json, rules) {
-        var error = [];
-        for (var key in rules) {
+        'use strict';
+        var error = [], key, keys, i, checkResult, propertyType;
+
+        keys = Object.keys(rules);
+        for (i = 0; i < keys.length; i += 1) {
+            key = keys[i];
             if (!json.hasOwnProperty(key)) {
                 error.push("json hasn't property " + key);
             }
         }
-        for (var key in json) {
+        keys = Object.keys(json);
+        for (i = 0; i < keys.length; i += 1) {
+            key = keys[i];
+            propertyType = typeof json[key];
+            checkResult = propertyType !== rules[key];
+
             if (!rules.hasOwnProperty(key)) {
                 error.push("json has unknown property " + key);
-            } else if (typeof json[key] != rules[key]) {
+            } else if (checkResult) {
                 error.push(key + "[" + (typeof json[key]) +
                     "] isn't of " + rules[key]);
             }
         }
 
-        return (error.length != 0) ? error : true;
+        return (error.length !== 0) ? error : true;
     }
 };
 
@@ -62,17 +98,23 @@ JsonValidator = {
  * @param json the json object
  */
 function ajaxSuccessCallback(callback, json) {
-    console.log(json);
+    'use strict';
+    console.log(JSON.stringify(json));
 
-    var rules = {
+    var rules, result;
+
+    rules = {
         "text": "string"
     };
-    var result = JsonValidator.validate(json, rules);
+
+    result = JsonValidator.validate(json, rules);
 
     if (result === true) {
         callback(json.text);
     } else {
-        // CR1: Probably is it better to display to user that something is wrong?
+        alert(result);
         console.log(result);
     }
 }
+
+

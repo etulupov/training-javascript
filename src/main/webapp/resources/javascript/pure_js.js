@@ -1,19 +1,19 @@
-/**
- * Setup on page load
- */
-window.onload = function () {
-    defineLogIfNotExists();
-    createMessageBox();
-    setupClickListener();
-};
+/*global defineLogIfNotExists*/
+/*global defineObjectKeysIfNotExists*/
+/*global getSourceFromEvent*/
+/*global AJAX_QUERY_URL*/
+/*global ajaxSuccessCallback*/
+/*global showMessage*/
+/*global console*/
 
 /**
  * Returns ajax client
  * @return {Object} ajax client
  */
 function getXmlHttp() {
+    'use strict';
     var xmlhttp;
-
+    /*global ActiveXObject*/
     try {
         xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
     } catch (e1) {
@@ -24,7 +24,7 @@ function getXmlHttp() {
         }
     }
 
-    if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+    if (!xmlhttp && XMLHttpRequest !== 'undefined') {
         xmlhttp = new XMLHttpRequest();
     }
 
@@ -42,12 +42,14 @@ function getXmlHttp() {
  * @param always always callback
  */
 function getJSON(url, success, fail, always) {
-    var READY_STATE = 4;
-    var HTTP_OK_STATUS = 200;
-    var http = getXmlHttp();
+    'use strict';
+    var READY_STATE = 4,
+        HTTP_OK_STATUS = 200,
+        http = getXmlHttp();
+
     http.onreadystatechange = function () {
-        if (http.readyState == READY_STATE) {
-            if (http.status == HTTP_OK_STATUS) {
+        if (http.readyState === READY_STATE) {
+            if (http.status === HTTP_OK_STATUS) {
                 // CR1 You define JsonValidator, probably it is better to move all validation to some validator?
                 // because you have two different functions to process error cases (here - fail and in JsonValidator)
                 // it has a sense to have only one fil function provided by the invoker
@@ -64,6 +66,7 @@ function getJSON(url, success, fail, always) {
         always();
     };
     http.open('GET', url, true);
+    http.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2005 00:00:00 GMT");
     http.send(null);
 }
 
@@ -73,6 +76,7 @@ function getJSON(url, success, fail, always) {
  * @param event the event
  */
 function buttonOnClickHandler(event) {
+    'use strict';
     var button = getSourceFromEvent(event);
     button.disabled = true;
 
@@ -91,6 +95,7 @@ function buttonOnClickHandler(event) {
  * @param message the message
  */
 function showMessage(message) {
+    'use strict';
     var messageBox = document.getElementById("message");
     messageBox.replaceChild(document.createTextNode(message), messageBox.firstChild);
 }
@@ -100,25 +105,38 @@ function showMessage(message) {
  * Creates div for displaying the message
  */
 function createMessageBox() {
-    var element = document.createElement("div");
-    element.id = "message";
-    var box = document.getElementById("box");
+    'use strict';
+    var element = document.createElement("div"),
+        box = document.getElementById("box");
 
-    if (box == null) {
+    element.id = "message";
+
+    if (box === null) {
         box = document.body;
     }
 
     box.appendChild(element);
     element.appendChild(document.createTextNode("Click button to download the data..."));
-
 }
 
 /**
  * Setup click listener
  */
 function setupClickListener() {
+    'use strict';
     var button = document.getElementById("button");
-    if (button != null) {
+    if (button !== null) {
         button.onclick = buttonOnClickHandler;
     }
 }
+
+/**
+ * Setup on page load
+ */
+window.onload = function () {
+    'use strict';
+    defineLogIfNotExists();
+    defineObjectKeysIfNotExists();
+    createMessageBox();
+    setupClickListener();
+};
