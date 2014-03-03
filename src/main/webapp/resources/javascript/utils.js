@@ -94,10 +94,12 @@ var JsonValidator = {
 
 /**
  * AJAX success callback
+ *
  * @param callback message callback
+ * @param fail fail callback
  * @param json the json object
  */
-function ajaxSuccessCallback(callback, json) {
+function ajaxSuccessCallback(callback, fail, json) {
     'use strict';
     console.log(JSON.stringify(json));
 
@@ -112,8 +114,11 @@ function ajaxSuccessCallback(callback, json) {
     if (result === true) {
         callback(json.text);
     } else {
-        alert(result);
-        console.log(result);
+        if (fail !== null) {
+            fail(result);
+        } else {
+            console.log(result);
+        }
     }
 }
 

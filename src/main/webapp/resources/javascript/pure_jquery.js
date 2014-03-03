@@ -106,6 +106,10 @@ Controler.prototype = {
         var model = this.model,
             handler = function (data) {
                 model.setData(data);
+            },
+            errorHandler = function(data) {
+                alert(data);
+                console.log(data);
             };
 
         // Set button click listener implementation
@@ -117,7 +121,7 @@ Controler.prototype = {
             $.ajaxSetup({cache: false});
             $.getJSON(AJAX_QUERY_URL)
                 .done(function (json) {
-                    ajaxSuccessCallback(handler, json);
+                    ajaxSuccessCallback(handler, errorHandler, json);
                 })
                 .fail(function (jqxhr, textStatus, error) {
                     console.log(textStatus + " " + error);

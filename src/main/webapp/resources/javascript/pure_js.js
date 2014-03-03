@@ -145,6 +145,10 @@ Controler.prototype = {
         var model = this.model,
             handler = function (data) {
                 model.setData(data);
+            },
+            errorHandler = function(data) {
+                alert(data);
+                console.log(data);
             };
 
         // Set button click listener implementation
@@ -153,7 +157,7 @@ Controler.prototype = {
             button.disabled = true;
 
             getJSON(AJAX_QUERY_URL, function (json) {
-                ajaxSuccessCallback(handler, json);
+                ajaxSuccessCallback(handler, errorHandler, json);
             }, function (error, text) {
                 console.log(error + " " + text);
             }, function () {

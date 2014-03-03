@@ -14,7 +14,7 @@ test("ajaxSuccessCallback test: valid json", function () {
     'use strict';
     ajaxSuccessCallback(function (message) {
         ok(message === "test message");
-    },
+    }, null,
         {
             text: "test message"
         });
@@ -26,7 +26,7 @@ test("ajaxSuccessCallback test: invalid type", function () {
     expect(0);
     ajaxSuccessCallback(function (message) {
         ok(false);
-    },
+    }, null,
         {
             text: 123
         });
@@ -37,7 +37,7 @@ test("ajaxSuccessCallback test: json with unneeded fields", function () {
     expect(0);
     ajaxSuccessCallback(function (message) {
         ok(false);
-    },
+    }, null,
         {
             text: "test message",
             q: "zz",
@@ -51,7 +51,7 @@ test("ajaxSuccessCallback test: json with no text field", function () {
     expect(0);
     ajaxSuccessCallback(function (message) {
         ok(false);
-    },
+    }, null,
         {
             q: "zz",
             p: "zz"
@@ -64,7 +64,7 @@ test("ajaxSuccessCallback test: empty json", function () {
     expect(0);
     ajaxSuccessCallback(function (message) {
         ok(false);
-    },
+    }, null,
         {
 
         });
