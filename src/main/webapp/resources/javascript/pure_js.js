@@ -3,7 +3,6 @@
 /*global getSourceFromEvent*/
 /*global AJAX_QUERY_URL*/
 /*global ajaxSuccessCallback*/
-/*global showMessage*/
 /*global console*/
 /*global Model*/
 /*global alert*/

@@ -4,35 +4,12 @@
 /*global getSourceFromEvent*/
 /*global AJAX_QUERY_URL*/
 /*global ajaxSuccessCallback*/
-/*global showMessage*/
 /*global console*/
 /*global alert*/
 /*jslint unparam: true*/
 /*global Model*/
 
-/**
- * Button click listener implementation
- * @param event the event
- */
-function buttonOnClickHandler(event) {
-    'use strict';
-    var button = getSourceFromEvent(event);
 
-    $(button).attr("disabled", true);
-
-    $.ajaxSetup({cache: false});
-    $.getJSON(AJAX_QUERY_URL)
-        .done(function (json) {
-            ajaxSuccessCallback(showMessage, json);
-        })
-        .fail(function (jqxhr, textStatus, error) {
-            console.log(textStatus + " " + error);
-        })
-        .always(function () {
-            $(button).attr("disabled", false);
-        });
-
-}
 
 
 

@@ -9,7 +9,12 @@
 /*global buttonOnClickHandler*/
 /*global JsonValidator*/
 /*global Observable*/
+/*global Model*/
+/*global Controller*/
+/*global View*/
 /*jslint unparam: true*/
+/*jslint browser: true*/
+
 test("ajaxSuccessCallback test: valid json", function () {
     'use strict';
     ajaxSuccessCallback(function (message) {
@@ -76,22 +81,15 @@ test("createMessageBox test", function () {
     ok($("#message").length !== 0);
 });
 
-test("showMessage test", function () {
+test("MVC test", function () {
     'use strict';
-    showMessage("ololo");
+
+    var model = new Model(),
+        view = new View(model);
+
+    view.model.setData("ololo"); // Trick: JSLint told that the view is a unused variable, I couldn't fix this warning.
+
     ok($("#message").text() === "ololo");
-});
-
-asyncTest("buttonOnClickHandler test", function () {
-    'use strict';
-    buttonOnClickHandler({target: {} });
-
-    setTimeout(function () {
-        ok($("#message").text().indexOf("Hello world!") !== -1);
-
-        $("#box").remove();
-        start();
-    }, 1000);
 });
 
 test("JsonValidator test: valid object", function () {
