@@ -118,3 +118,70 @@ function ajaxSuccessCallback(callback, json) {
 }
 
 
+
+/**
+ * This class represents an observable object. An observable object can have one or more observers.
+ */
+function Observable() {
+    'use strict';
+    this.observer = [];
+}
+
+Observable.prototype = {
+    observer: [],
+
+    /**
+     * Adds observer to list
+     * @param observer the observer object
+     */
+    addObserver: function (observer) {
+        'use strict';
+        this.observer.push(observer);
+    },
+
+    /**
+     * Notifies all registered observer
+     */
+    notifyObservers: function() {
+        'use strict';
+        var i;
+
+        for (i = 0; i < this.observer.length; i += 1) {
+            this.observer[i].update();
+        }
+    }
+};
+
+/**
+ * This class represents model object
+ */
+function Model() {
+    'use strict';
+    this.data = "";
+    this.observable = new Observable();
+}
+
+Model.prototype = {
+    data: "",
+    observable: null,
+
+    /**
+     * Sets the data value and notifies all subscribers
+     * @param data
+     */
+    setData: function(value) {
+        'use strict';
+        this.data = value;
+        this.observable.notifyObservers();
+    },
+
+    /**
+     * Gets the data value
+     * @returns {*}
+     */
+    getData: function() {
+        'use strict';
+        return this.data;
+    }
+};
+

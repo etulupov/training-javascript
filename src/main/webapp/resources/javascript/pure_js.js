@@ -5,6 +5,10 @@
 /*global ajaxSuccessCallback*/
 /*global showMessage*/
 /*global console*/
+/*global Model*/
+/*global alert*/
+
+
 
 /**
  * Returns ajax client
@@ -31,11 +35,11 @@ function getXmlHttp() {
     return xmlhttp;
 }
 
-// CR1 I think in your case it is good to introduce MVC pattern (also it will be quite interesting if you introduce some
-// event bus)
 
 /**
  * Execute AJAX-query
+ * This function like JQuery $.getJSON
+ *
  * @param url the url
  * @param success success callback
  * @param fail fail callback
@@ -50,9 +54,7 @@ function getJSON(url, success, fail, always) {
     http.onreadystatechange = function () {
         if (http.readyState === READY_STATE) {
             if (http.status === HTTP_OK_STATUS) {
-                // CR1 You define JsonValidator, probably it is better to move all validation to some validator?
-                // because you have two different functions to process error cases (here - fail and in JsonValidator)
-                // it has a sense to have only one fil function provided by the invoker
+                // This function like JQuery $.getJSON
                 try {
                     success(JSON.parse(http.responseText));
                 } catch (e) {
@@ -68,36 +70,6 @@ function getJSON(url, success, fail, always) {
     http.open('GET', url, true);
     http.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2005 00:00:00 GMT");
     http.send(null);
-}
-
-
-/**
- * Button click listener implementation
- * @param event the event
- */
-function buttonOnClickHandler(event) {
-    'use strict';
-    var button = getSourceFromEvent(event);
-    button.disabled = true;
-
-    getJSON(AJAX_QUERY_URL, function (json) {
-        ajaxSuccessCallback(showMessage, json);
-    }, function (error, text) {
-        console.log(error + " " + text);
-    }, function () {
-        button.disabled = false;
-    });
-
-}
-
-/**
- * Displays message
- * @param message the message
- */
-function showMessage(message) {
-    'use strict';
-    var messageBox = document.getElementById("message");
-    messageBox.replaceChild(document.createTextNode(message), messageBox.firstChild);
 }
 
 
@@ -119,16 +91,77 @@ function createMessageBox() {
     element.appendChild(document.createTextNode("Click button to download the data..."));
 }
 
+
 /**
- * Setup click listener
+ * This class represents view object
+ * @param model the model
+ * @param updateText the update text callback
  */
-function setupClickListener() {
+function View(model) {
     'use strict';
-    var button = document.getElementById("button");
-    if (button !== null) {
-        button.onclick = buttonOnClickHandler;
-    }
+    this.model = model;
+
+    model.observable.addObserver(this);
+
+    createMessageBox();
 }
+
+View.prototype = {
+    /**
+     * Setup click listener
+     */
+    setClickListener: function (handler) {
+        'use strict';
+        var button = document.getElementById("button");
+        if (button !== null) {
+            button.onclick = handler;
+        }
+    },
+
+    /**
+     * Calls when model was changed
+     */
+    update: function () {
+        'use strict';
+        var messageBox = document.getElementById("message"),
+            message = this.model.getData();
+        messageBox.replaceChild(document.createTextNode(message), messageBox.firstChild);
+    }
+};
+
+/**
+ * This class represents controller object
+ */
+function Controler(model, view) {
+    'use strict';
+
+    this.model = model;
+    this.view = view;
+}
+
+Controler.prototype = {
+    init: function() {
+        'use strict';
+        var model = this.model,
+            handler = function (data) {
+                model.setData(data);
+            };
+
+        // Set button click listener implementation
+        this.view.setClickListener(function(event) {
+            var button = getSourceFromEvent(event);
+            button.disabled = true;
+
+            getJSON(AJAX_QUERY_URL, function (json) {
+                ajaxSuccessCallback(handler, json);
+            }, function (error, text) {
+                console.log(error + " " + text);
+            }, function () {
+                button.disabled = false;
+            });
+        });
+    }
+};
 
 /**
  * Setup on page load
@@ -137,6 +170,13 @@ window.onload = function () {
     'use strict';
     defineLogIfNotExists();
     defineObjectKeysIfNotExists();
-    createMessageBox();
-    setupClickListener();
+
+    var model = new Model(),
+        view = new View(model),
+        controller = new Controler(model, view);
+
+    controller.init();
 };
+
+
+

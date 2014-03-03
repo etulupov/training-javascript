@@ -8,6 +8,7 @@
 /*global showMessage*/
 /*global buttonOnClickHandler*/
 /*global JsonValidator*/
+/*global Observable*/
 /*jslint unparam: true*/
 test("ajaxSuccessCallback test: valid json", function () {
     'use strict';
@@ -113,3 +114,37 @@ test("JsonValidator test: object has property with different type", function () 
     ok(JsonValidator.validate({test: 123}, {test: "string"}) !== true);
 });
 
+test("Observable test: check one observer", function () {
+    'use strict';
+    var observable = new Observable();
+    observable.addObserver({
+        update: function() {
+            ok(true);
+        }
+    });
+
+    observable.notifyObservers();
+});
+
+test("Observable test: check multiple observers", function () {
+    'use strict';
+    var observable = new Observable(),
+        result1 = false,
+        result2 = false;
+
+    observable.addObserver({
+        update: function() {
+            result1 = true;
+        }
+    });
+
+    observable.addObserver({
+        update: function() {
+            result2 = true;
+        }
+    });
+
+    observable.notifyObservers();
+
+    ok(result1 && result2);
+});

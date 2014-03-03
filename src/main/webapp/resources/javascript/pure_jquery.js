@@ -8,6 +8,7 @@
 /*global console*/
 /*global alert*/
 /*jslint unparam: true*/
+/*global Model*/
 
 /**
  * Button click listener implementation
@@ -33,16 +34,6 @@ function buttonOnClickHandler(event) {
 
 }
 
-/**
- * Displays message
- * @param message the message
- */
-function showMessage(message) {
-    'use strict';
-    $("#box").fadeOut('fast');
-    $("#message").text(message);
-    $("#box").fadeIn('fast');
-}
 
 
 /**
@@ -60,13 +51,84 @@ function createMessageBox() {
         .text('Click button to download the data');
 }
 
+
 /**
- * Setup click listener
+ * This class represents view object
+ * @param model the model
+ * @param updateText the update text callback
  */
-function setupClickListener() {
+function View(model) {
     'use strict';
-    $('#button').click(buttonOnClickHandler);
+    this.model = model;
+
+    model.observable.addObserver(this);
+
+    createMessageBox();
 }
+
+View.prototype = {
+    /**
+     * Setup click listener
+     */
+    setClickListener: function (handler) {
+        'use strict';
+        $('#button').click(handler);
+    },
+
+    /**
+     * Calls when model was changed
+     */
+    update: function () {
+        'use strict';
+        var message = this.model.getData();
+        $("#box").fadeOut('fast');
+        $("#message").text(message);
+        $("#box").fadeIn('fast');
+    }
+};
+
+/**
+ * This class represents controller object
+ */
+function Controler(model, view) {
+    'use strict';
+
+    this.model = model;
+    this.view = view;
+}
+
+Controler.prototype = {
+
+
+    init: function () {
+        'use strict';
+
+        var model = this.model,
+            handler = function (data) {
+                model.setData(data);
+            };
+
+        // Set button click listener implementation
+        this.view.setClickListener(function (event) {
+            var button = getSourceFromEvent(event);
+
+            $(button).attr("disabled", true);
+
+            $.ajaxSetup({cache: false});
+            $.getJSON(AJAX_QUERY_URL)
+                .done(function (json) {
+                    ajaxSuccessCallback(handler, json);
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    console.log(textStatus + " " + error);
+                })
+                .always(function () {
+                    $(button).attr("disabled", false);
+                });
+        });
+    }
+};
+
 
 /**
  * Setup on page load
@@ -75,6 +137,10 @@ $(window).load(function () {
     'use strict';
     defineLogIfNotExists();
     defineObjectKeysIfNotExists();
-    createMessageBox();
-    setupClickListener();
+
+    var model = new Model(),
+        view = new View(model),
+        controller = new Controler(model, view);
+
+    controller.init();
 });
